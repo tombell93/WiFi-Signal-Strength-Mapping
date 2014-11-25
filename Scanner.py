@@ -3,7 +3,6 @@
 
 '''''''''''''''
 Authored by Tom Bell
-MWR InfoSecurity
 '''''''''''''''
 
 import sys

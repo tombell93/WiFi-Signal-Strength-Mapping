@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-# bitmap.py
-
 import wx
 import Scanner
 import pickle
@@ -40,6 +38,8 @@ class MyFrame(wx.Frame):
             self.dc.SetBrush(wx.Brush(colour, wx.SOLID))
             # set x, y, w, h for rectangle
             self.dc.DrawCircle(point['point'][0], point['point'][1], 10)
+            self.dc.DrawText(str(point['power']), point['point'][0], point['point'][1])
+
             self.dc.EndDrawing()
 
     def OnClick(self, event):
@@ -54,7 +54,7 @@ class MyFrame(wx.Frame):
             print 'NOTE: Wi-Fi data is available.'
 
             # ESSID's of networks being used
-            ESSIDList = ['eduroam', 'ISS', 'The House of Fun']
+            ESSIDList = ['eduroam', 'ISS', 'ECS-WLAN', 'The House of Fun']
 
             for WAPItem in parsedListOfWAPDicts:
                 # TODO: If WAPItem is being used, check if it's the strongest signal
@@ -67,18 +67,23 @@ class MyFrame(wx.Frame):
                     
                     pointDict = {'ESSID': essid, 'BSSID': bssid, 'power': power, 'point': pointTuple}
                     self.listOfWAPS.append(pointDict)
-                    print 'STORED--> Point: ' + str(pointTuple) + 'ESSID: ' + essid + ', BSSID: ' + bssid + ', Power: ' + str(power);
-                else:            
-                    print 'IGNORED-> Point: ' + str(pointTuple) + 'ESSID: ' + essid + ', BSSID: ' + bssid + ', Power: ' + str(power);
+                    #print 'STORED--> Point: ' + str(pointTuple) + ' ESSID: ' + essid + ', BSSID: ' + bssid + ', Power: ' + str(power);
+                    print 'STORED--> ' + str(pointTuple) + ' ' + essid + ' ' + bssid + ' ' + str(power);
+                else:   
+                    pass         
+                    #print 'IGNORED-> Point: ' + str(pointTuple) + 'ESSID: ' + essid + ', BSSID: ' + bssid + ', Power: ' + str(power);
 
         else:
             print 'WARNING: Wi-Fi data not available.'
 
-        # TODO: Redraw all points
-        print 'Redrawing all points'
+        # Redraw all points
         self.RedrawAllPoints()
         self.save(self.listOfWAPS, 'list')
-        print 'Redrew all points'
+
+
+        # Print dict
+        for x in self.listOfWAPS:
+            print (x)
 
     def save(self, obj, name ):
         with open('data.pickle', 'wb') as handle:

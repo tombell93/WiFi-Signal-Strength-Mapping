@@ -22,15 +22,25 @@ class MyFrame(wx.Frame):
 
     def OnPaint(self, event):
         self.dc = wx.PaintDC(self)
-        self.dc.DrawBitmap(self.floor1_image, 0, 0)
+        self.dc.DrawBitmap(self.floor4_image, 0, 0)
         self.load('name' )
         self.RedrawAllPoints()
 
     def RedrawAllPoints(self):
         #self.dc.Clear()
         #self.dc.DrawBitmap(self.floor1_image, 0, 0)
+        currentLocation = str()
+        currentPoint = str()
+        offset = 0
         for point in self.listOfWAPS:
 
+            currentPoint = str(point['point'][0])
+            if currentLocation != currentPoint:
+                currentLocation = currentPoint
+                offset = 0
+            else:
+                offset += 1
+                
             self.dc.BeginDrawing()
             yellowIntensity = (-int(point['power'])*1.5 + (-int(point['power'])))
             colour = wx.Colour(255,yellowIntensity,0)
@@ -38,7 +48,7 @@ class MyFrame(wx.Frame):
             self.dc.SetBrush(wx.Brush(colour, wx.SOLID))
             # set x, y, w, h for rectangle
             self.dc.DrawCircle(point['point'][0], point['point'][1], 10)
-            self.dc.DrawText(str(point['power']), point['point'][0], point['point'][1])
+            self.dc.DrawText(str(point['power']), point['point'][0]+(offset*25), point['point'][1])
 
             self.dc.EndDrawing()
 
@@ -86,12 +96,12 @@ class MyFrame(wx.Frame):
             print (x)
 
     def save(self, obj, name ):
-        with open('data.pickle', 'wb') as handle:
+        with open('top_1.pickle', 'wb') as handle:
             pickle.dump(obj, handle)
 
 
     def load(self, name ):
-        with open('data.pickle', 'rb') as handle:
+        with open('top_1.pickle', 'rb') as handle:
             b = pickle.load(handle)
             self.listOfWAPS = b
             print self.listOfWAPS

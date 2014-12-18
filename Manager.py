@@ -14,6 +14,8 @@ class MyFrame(wx.Frame):
 
         self.floor1_image = wx.Bitmap('b59_1.png')
         self.floor4_image = wx.Bitmap('b59_4.png')
+        self.heat1 = wx.Bitmap('floor4_3.png')
+        self.heat2 = wx.Bitmap('floor4_3-blended.png')
 
         wx.EVT_PAINT(self, self.OnPaint)
         self.Bind(wx.EVT_LEFT_UP, self.OnClick)
@@ -33,24 +35,26 @@ class MyFrame(wx.Frame):
         currentPoint = str()
         offset = 0
         for point in self.listOfWAPS:
+            if point['ESSID'] == 'eduroam':
 
-            currentPoint = str(point['point'][0])
-            if currentLocation != currentPoint:
-                currentLocation = currentPoint
-                offset = 0
-            else:
-                offset += 1
-                
-            self.dc.BeginDrawing()
-            yellowIntensity = (-int(point['power'])*1.5 + (-int(point['power'])))
-            colour = wx.Colour(255,yellowIntensity,0)
-            self.dc.SetPen(wx.Pen(colour,style=wx.TRANSPARENT))
-            self.dc.SetBrush(wx.Brush(colour, wx.SOLID))
-            # set x, y, w, h for rectangle
-            self.dc.DrawCircle(point['point'][0], point['point'][1], 10)
-            self.dc.DrawText(str(point['power']), point['point'][0]+(offset*25), point['point'][1])
+                currentPoint = str(point['point'][0])
+                if currentLocation != currentPoint:
+                    currentLocation = currentPoint
+                    offset = 0
+                else:
 
-            self.dc.EndDrawing()
+                    offset += 1
+                    
+                self.dc.BeginDrawing()
+                yellowIntensity = (-int(point['power'])*1.5 + (-int(point['power'])))
+                colour = wx.Colour(255,yellowIntensity,0)
+                self.dc.SetPen(wx.Pen(colour,style=wx.TRANSPARENT))
+                self.dc.SetBrush(wx.Brush(colour, wx.SOLID))
+                # set x, y, w, h for rectangle
+                self.dc.DrawCircle(point['point'][0], point['point'][1], 10)
+                self.dc.DrawText(str(point['power']), point['point'][0]+(offset*25), point['point'][1])
+
+                self.dc.EndDrawing()
 
     def OnClick(self, event):
         point = event.GetLogicalPosition(self.dc)
@@ -64,7 +68,8 @@ class MyFrame(wx.Frame):
             print 'NOTE: Wi-Fi data is available.'
 
             # ESSID's of networks being used
-            ESSIDList = ['eduroam', 'ISS', 'ECS-WLAN', 'The House of Fun']
+            #ESSIDList = ['eduroam', 'ISS', 'ECS-WLAN', 'The House of Fun']
+            ESSIDList = ['eduroam']
 
             for WAPItem in parsedListOfWAPDicts:
                 # TODO: If WAPItem is being used, check if it's the strongest signal
@@ -93,7 +98,8 @@ class MyFrame(wx.Frame):
 
         # Print dict
         for x in self.listOfWAPS:
-            print (x)
+            #print (x)
+            pass
 
     def save(self, obj, name ):
         with open('top_1.pickle', 'wb') as handle:
